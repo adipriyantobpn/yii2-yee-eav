@@ -8,7 +8,7 @@ use yeesoft\eav\models\EavEntity;
 use yeesoft\eav\models\EavEntityModel;
 use yii\base\Behavior;
 use yii\base\UnknownPropertyException;
-use yii\db\ActiveRecord;
+use yeesoft\db\ActiveRecord;
 
 /**
  * Class EavBehavior
@@ -31,7 +31,7 @@ class EavBehavior extends Behavior
             ActiveRecord::EVENT_AFTER_FIND => 'afterFind',
             ActiveRecord::EVENT_INIT => 'eavInit',
             ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
-            ActiveRecord::EVENT_AFTER_UPDATE => 'afterSave',
+            ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
         ];
     }
 
@@ -80,7 +80,7 @@ class EavBehavior extends Behavior
             $modelTable = EavEntityModel::tableName();
             $entityTable = EavEntity::tableName();
             $attributeTable = EavAttribute::tableName();
-            $entityToAttributeTable = 'eav_entity_attribute';
+            $entityToAttributeTable = '{{%eav_entity_attribute}}';
 
             $attributes = EavAttribute::find()
                 ->innerJoin($entityToAttributeTable, "$attributeTable.id = $entityToAttributeTable.attribute_id")
@@ -231,10 +231,10 @@ class EavBehavior extends Behavior
         }
     }
 
-    public function afterSave($insert, $changedAttributes)
+    public function afterUpdate()
     {
         foreach ($this->eavAttributes as $name => $attribute) {
-            $attribute->save();
+            $attribute->save();  
         }
     }
 

@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property EavAttribute[] $eavAttributes
  */
-class EavAttributeType extends \yii\db\ActiveRecord
+class EavAttributeType extends \yeesoft\db\ActiveRecord
 {
     const STORE_TYPE_RAW = 'raw';
     const STORE_TYPE_OPTION = 'option';

@@ -46,12 +46,6 @@ function loadEavCategories() {
             $('.eav-categories-wrapper').parent().show();
             $('.eav-categories-wrapper').html(data.list);
 
-            $('.eav-categories-wrapper select').not('.non-styler').styler({
-                selectPlaceholder: "Select...",
-                selectSearchNotFound: "Nothing found",
-                selectSearchPlaceholder: "Search..."
-            });
-
             loadEavAttributes();
 
             $('.eav-categories-wrapper select').change(function () {

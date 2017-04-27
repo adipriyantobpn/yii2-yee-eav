@@ -2,11 +2,11 @@
 
 use yeesoft\eav\models\EavAttribute;
 use yeesoft\helpers\Html;
-use yii\widgets\ActiveForm;
+use yeesoft\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model yeesoft\eav\models\EavAttributeOption */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yeesoft\widgets\ActiveForm */
 ?>
 
 <div class="eav-attribute-option-form">

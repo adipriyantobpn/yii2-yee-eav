@@ -15,7 +15,7 @@ use Yii;
  * @property EavAttribute $attribute
  * @property EavValue[] $eavValues
  */
-class EavAttributeOption extends \yii\db\ActiveRecord
+class EavAttributeOption extends \yeesoft\db\ActiveRecord
 {
     /**
      * @inheritdoc

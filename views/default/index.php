@@ -40,7 +40,7 @@ EavAsset::register($this);
                 <div class="panel-body">
                     <div class="pull-left" style="margin-right: 10px;">
                         <label class="control-label" for="entityModel">Model: </label>
-                        <?= Html::dropDownList('entityModel', null, $entityModels, ['id' => 'entityModel']) ?>
+                        <?= Html::dropDownList('entityModel', null, $entityModels, ['id' => 'entityModel', 'class' => 'form-control']) ?>
                     </div>
                     <div class="pull-left" style="display: none;">
                         <label class="control-label pull-left" for="entityCategory">

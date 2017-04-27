@@ -5,7 +5,7 @@ namespace yeesoft\eav\models;
 use yeesoft\helpers\FA;
 use Yii;
 use yii\base\InvalidParamException;
-use yii\db\ActiveRecord;
+use yeesoft\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -25,7 +25,7 @@ use yii\helpers\ArrayHelper;
  * @property EavAttributeOption[] $eavAttributeOptions
  * @property EavValue[] $eavValues
  */
-class EavAttribute extends \yii\db\ActiveRecord
+class EavAttribute extends ActiveRecord
 {
     /**
      * @var yeesoft\eav\models\EavValue
@@ -99,7 +99,7 @@ class EavAttribute extends \yii\db\ActiveRecord
     public function getEntity()
     {
         return $this->hasMany(EavEntity::className(), ['id' => 'entity_id'])
-            ->viaTable('eav_entity_attribute', ['attribute_id' => 'id']);
+            ->viaTable('{{%eav_entity_attribute}}', ['attribute_id' => 'id']);
     }
 
     /**
@@ -110,13 +110,13 @@ class EavAttribute extends \yii\db\ActiveRecord
         return $this->hasMany(EavAttributeOption::className(), ['attribute_id' => 'id']);
     }
 
-    public function getEavOptionsList()
+    public function getEavOptionsList($translateCategory = null)
     {
         $result = [];
         $options = $this->eavOptions;
 
         foreach ($options as $option) {
-            $result[$option->id] = $option->value;
+            $result[$option->id] = ($translateCategory === null) ? $option->value : Yii::t($translateCategory, $option->value);
         }
 
         return $result;

@@ -156,7 +156,7 @@ class DefaultController extends BaseController
 
                     if ($categories && !empty($categories)) {
                         $categories = ArrayHelper::merge(['' => Yii::t('yee', 'Not Selected')], $categories);
-                        $dropDown = Html::dropDownList('entityCategory', null, $categories, ['id' => 'entityCategory']);
+                        $dropDown = Html::dropDownList('entityCategory', null, $categories, ['id' => 'entityCategory', 'class' => 'form-control']);
                         return ['list' => $dropDown];
                     }
                 }

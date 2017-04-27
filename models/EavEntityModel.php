@@ -13,7 +13,7 @@ use Yii;
  *
  * @property EavAttribute[] $eavAttributes
  */
-class EavEntityModel extends \yii\db\ActiveRecord
+class EavEntityModel extends \yeesoft\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -51,7 +51,7 @@ class EavEntityModel extends \yii\db\ActiveRecord
     public function getEavAttributes()
     {
         return $this->hasMany(EavAttribute::className(), ['id' => 'entity_id'])
-            ->viaTable('eav_entity_attribute', ['attribute_id' => 'id'])
+            ->viaTable('{{%eav_entity_attribute}}', ['attribute_id' => 'id'])
             ->orderBy(['order' => SORT_DESC]);
     }
 }

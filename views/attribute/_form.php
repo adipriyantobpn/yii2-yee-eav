@@ -2,11 +2,11 @@
 
 use yeesoft\helpers\FA;
 use yeesoft\helpers\Html;
-use yii\widgets\ActiveForm;
+use yeesoft\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model yeesoft\eav\models\EavAttribute */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yeesoft\widgets\ActiveForm */
 ?>
 
 <div class="eav-attribute-form">
@@ -56,7 +56,7 @@ use yii\widgets\ActiveForm;
                         <?= $form->field($model, 'type_id')->dropDownList(yeesoft\eav\models\EavAttributeType::getAttributeTypes()) ?>
 
                         <?= $form->field($model, 'icon')->dropDownList(FA::getIconsList(), [
-                            'class' => 'clearfix non-styler form-control fa-font-family',
+                            'class' => 'clearfix form-control fa-font-family',
                             'encode' => false,
                         ]) ?>
 

@@ -11,7 +11,7 @@ namespace yeesoft\eav\models;
  *
  * @property EavAttribute[] $eavAttributes
  */
-class EavEntity extends \yii\db\ActiveRecord
+class EavEntity extends \yeesoft\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -58,7 +58,7 @@ class EavEntity extends \yii\db\ActiveRecord
     {
 
         return $this->hasMany(EavAttribute::className(), ['id' => 'attribute_id'])
-            ->viaTable('eav_entity_attribute', ['entity_id' => 'id']);
+            ->viaTable('{{%eav_entity_attribute}}', ['entity_id' => 'id']);
         //->orderBy(['eav_entity_attribute.order' => SORT_DESC]);
     }
 }

@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'actions' => [Url::to(['bulk-delete']) => Yii::t('yee', 'Delete')] //Configure here you bulk actions
                 ],
                 'columns' => [
-                    ['class' => 'yii\grid\CheckboxColumn', 'options' => ['style' => 'width:10px']],
+                    ['class' => 'yeesoft\grid\CheckboxColumn', 'options' => ['style' => 'width:10px']],
                     ['attribute' => 'id', 'options' => ['style' => 'width:20px']],
                     [
                         'class' => 'yeesoft\grid\columns\TitleActionColumn',

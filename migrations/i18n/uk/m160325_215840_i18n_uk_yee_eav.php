@@ -1,6 +1,6 @@
 <?php
 
-use yeesoft\i18n\TranslatedMessagesMigration;
+use yeesoft\db\TranslatedMessagesMigration;
 
 class m160325_215840_i18n_uk_yee_eav extends TranslatedMessagesMigration
 {

@@ -1,42 +1,41 @@
 <?php
 
-use yii\db\Migration;
-
-class m160325_140543_init_eav extends Migration
+class m160325_140543_init_eav extends yii\db\Migration
 {
+
+    const ENTITY_TABLE = '{{%eav_entity}}';
+    const ENTITY_MODEL_TABLE = '{{%eav_entity_model}}';
+    const ENTITY_ATTRIBUTE_TABLE = '{{%eav_entity_attribute}}';
+    const ATTRIBUTE_TYPE_TABLE = '{{%eav_attribute_type}}';
+    const ATTRIBUTE_OPTION_TABLE = '{{%eav_attribute_option}}';
+    const ATTRIBUTE_TABLE = '{{%eav_attribute}}';
+    const VALUE_TABLE = '{{%eav_value}}';
 
     public function safeUp()
     {
-
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
         }
 
-        //---------------- eav_entity_model ----------------
-
-        $this->createTable('eav_entity_model', [
+        $this->createTable(self::ENTITY_MODEL_TABLE, [
             'id' => $this->primaryKey(),
             'entity_name' => $this->string(100)->notNull(),
             'entity_model' => $this->string(100)->notNull(),
         ], $tableOptions);
 
-        $this->createIndex('eav_entity_model_unique_model', 'eav_entity_model', ['entity_model'], true);
+        $this->createIndex('eav_entity_model_unique_model', self::ENTITY_MODEL_TABLE, ['entity_model'], true);
 
-        //---------------- eav_attribute_type ----------------
-
-        $this->createTable('eav_attribute_type', [
+        $this->createTable(self::ATTRIBUTE_TYPE_TABLE, [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'store_type' => $this->string('32')->notNull()->defaultValue('raw')
         ], $tableOptions);
 
-        $this->insert('eav_attribute_type', ['name' => 'text', 'store_type' => 'raw']);
-        $this->insert('eav_attribute_type', ['name' => 'select', 'store_type' => 'option']);
+        $this->insert(self::ATTRIBUTE_TYPE_TABLE, ['name' => 'text', 'store_type' => 'raw']);
+        $this->insert(self::ATTRIBUTE_TYPE_TABLE, ['name' => 'select', 'store_type' => 'option']);
 
-        //---------------- eav_attribute ----------------
-
-        $this->createTable('eav_attribute', [
+        $this->createTable(self::ATTRIBUTE_TABLE, [
             'id' => $this->primaryKey(),
             'type_id' => $this->integer(),
             'name' => $this->string()->notNull(),
@@ -47,56 +46,42 @@ class m160325_140543_init_eav extends Migration
             'required' => $this->integer(1),
         ], $tableOptions);
 
-        $this->createIndex('eav_attribute_type_id', 'eav_attribute', ['type_id']);
-        $this->createIndex('eav_attribute_name', 'eav_attribute', ['name']);
+        $this->createIndex('eav_attribute_type_id', self::ATTRIBUTE_TABLE, ['type_id']);
+        $this->createIndex('eav_attribute_name', self::ATTRIBUTE_TABLE, ['name']);
+        $this->addForeignKey('fk_eav_attribute_type', self::ATTRIBUTE_TABLE, 'type_id', self::ATTRIBUTE_TYPE_TABLE, 'id', 'CASCADE', 'CASCADE');
 
-        $this->addForeignKey('fk_eav_attribute_type', 'eav_attribute', 'type_id', 'eav_attribute_type', 'id', 'CASCADE', 'CASCADE');
-
-        //---------------- eav_attribute_option ----------------
-
-        $this->createTable('eav_attribute_option', [
+        $this->createTable(self::ATTRIBUTE_OPTION_TABLE, [
             'id' => $this->primaryKey(),
             'attribute_id' => $this->integer(),
             'value' => $this->string(),
         ], $tableOptions);
 
-        $this->createIndex('eav_attribute_option_attribute_id', 'eav_attribute_option', ['attribute_id']);
+        $this->createIndex('eav_attribute_option_attribute_id', self::ATTRIBUTE_OPTION_TABLE, ['attribute_id']);
+        $this->addForeignKey('fk_eav_option_attribute', self::ATTRIBUTE_OPTION_TABLE, 'attribute_id', self::ATTRIBUTE_TABLE, 'id', 'CASCADE', 'CASCADE');
 
-        $this->addForeignKey('fk_eav_option_attribute', 'eav_attribute_option', 'attribute_id', 'eav_attribute', 'id', 'CASCADE', 'CASCADE');
-
-        //---------------- eav_entity ----------------
-
-        $this->createTable('eav_entity', [
+        $this->createTable(self::ENTITY_TABLE, [
             'id' => $this->primaryKey(),
             'model_id' => $this->integer(),
             'category_id' => $this->integer(),
         ], $tableOptions);
 
-        $this->createIndex('eav_entity_model_id', 'eav_entity', ['model_id']);
-        $this->createIndex('eav_entity_category_id', 'eav_entity', ['category_id']);
+        $this->createIndex('eav_entity_model_id', self::ENTITY_TABLE, ['model_id']);
+        $this->createIndex('eav_entity_category_id', self::ENTITY_TABLE, ['category_id']);
+        $this->addForeignKey('fk_eav_entity_model', self::ENTITY_TABLE, 'model_id', self::ENTITY_MODEL_TABLE, 'id', 'CASCADE', 'CASCADE');
 
-        $this->addForeignKey('eav_entity_model', 'eav_entity', 'model_id', 'eav_entity_model', 'id', 'CASCADE', 'CASCADE');
-
-
-        //---------------- eav_entity_attribute ----------------
-
-        $this->createTable('eav_entity_attribute', [
+        $this->createTable(self::ENTITY_ATTRIBUTE_TABLE, [
             'id' => $this->primaryKey(),
             'entity_id' => $this->integer(),
             'attribute_id' => $this->integer(),
             'order' => $this->integer()->defaultValue(0),
         ], $tableOptions);
 
-        $this->createIndex('eav_entity_attribute_entity_id', 'eav_entity_attribute', ['entity_id']);
-        $this->createIndex('eav_entity_attribute_attribute_id', 'eav_entity_attribute', ['attribute_id']);
+        $this->createIndex('eav_entity_attribute_entity_id', self::ENTITY_ATTRIBUTE_TABLE, ['entity_id']);
+        $this->createIndex('eav_entity_attribute_attribute_id', self::ENTITY_ATTRIBUTE_TABLE, ['attribute_id']);
+        $this->addForeignKey('fk_eav_entity_attribute_entity', self::ENTITY_ATTRIBUTE_TABLE, 'entity_id', self::ENTITY_TABLE, 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_eav_entity_attribute_attribute', self::ENTITY_ATTRIBUTE_TABLE, 'attribute_id', self::ATTRIBUTE_TABLE, 'id', 'CASCADE', 'CASCADE');
 
-        $this->addForeignKey('eav_entity_attribute_entity', 'eav_entity_attribute', 'entity_id', 'eav_entity', 'id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('eav_entity_attribute_attribute', 'eav_entity_attribute', 'attribute_id', 'eav_attribute', 'id', 'CASCADE', 'CASCADE');
-
-
-        //---------------- eav_value ----------------
-
-        $this->createTable('eav_value', [
+        $this->createTable(self::VALUE_TABLE, [
             'id' => $this->primaryKey(),
             'entity_id' => $this->integer(),
             'attribute_id' => $this->integer(),
@@ -104,30 +89,30 @@ class m160325_140543_init_eav extends Migration
             'value' => $this->text(),
         ], $tableOptions);
 
-        $this->createIndex('eav_value_entity_id', 'eav_value', ['entity_id']);
-        $this->createIndex('eav_value_attribute_id', 'eav_value', ['attribute_id']);
-        $this->createIndex('eav_value_item_id', 'eav_value', ['item_id']);
-
-        $this->addForeignKey('eav_value_entity', 'eav_value', 'entity_id', 'eav_entity', 'id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('eav_value_attribute', 'eav_value', 'attribute_id', 'eav_attribute', 'id', 'CASCADE', 'CASCADE');
+        $this->createIndex('eav_value_entity_id', self::VALUE_TABLE, ['entity_id']);
+        $this->createIndex('eav_value_attribute_id', self::VALUE_TABLE, ['attribute_id']);
+        $this->createIndex('eav_value_item_id', self::VALUE_TABLE, ['item_id']);
+        $this->addForeignKey('fk_eav_value_entity', self::VALUE_TABLE, 'entity_id', self::ENTITY_TABLE, 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk_eav_value_attribute', self::VALUE_TABLE, 'attribute_id', self::ATTRIBUTE_TABLE, 'id', 'CASCADE', 'CASCADE');
     }
 
     public function safeDown()
     {
-        $this->dropForeignKey('fk_eav_attribute_type', 'eav_attribute');
-        $this->dropForeignKey('fk_eav_option_attribute', 'eav_attribute_option');
-        $this->dropForeignKey('eav_entity_model', 'eav_entity', 'model_id');
-        $this->dropForeignKey('eav_entity_attribute_entity', 'eav_entity_attribute');
-        $this->dropForeignKey('eav_entity_attribute_attribute', 'eav_entity_attribute');
-        $this->dropForeignKey('eav_value_entity', 'eav_value');
-        $this->dropForeignKey('eav_value_attribute', 'eav_value');
+        $this->dropForeignKey('fk_eav_attribute_type', self::ATTRIBUTE_TABLE);
+        $this->dropForeignKey('fk_eav_option_attribute', self::ATTRIBUTE_OPTION_TABLE);
+        $this->dropForeignKey('fk_eav_entity_model', self::ENTITY_TABLE, 'model_id');
+        $this->dropForeignKey('fk_eav_entity_attribute_entity', self::ENTITY_ATTRIBUTE_TABLE);
+        $this->dropForeignKey('fk_eav_entity_attribute_attribute', self::ENTITY_ATTRIBUTE_TABLE);
+        $this->dropForeignKey('fk_eav_value_entity', self::VALUE_TABLE);
+        $this->dropForeignKey('fk_eav_value_attribute', self::VALUE_TABLE);
 
-        $this->dropTable('eav_attribute');
-        $this->dropTable('eav_attribute_option');
-        $this->dropTable('eav_attribute_type');
-        $this->dropTable('eav_entity');
-        $this->dropTable('eav_entity_attribute');
-        $this->dropTable('eav_entity_model');
+        $this->dropTable(self::ATTRIBUTE_TABLE);
+        $this->dropTable(self::ATTRIBUTE_OPTION_TABLE);
+        $this->dropTable(self::ATTRIBUTE_TYPE_TABLE);
+        $this->dropTable(self::ENTITY_TABLE);
+        $this->dropTable(self::ENTITY_ATTRIBUTE_TABLE);
+        $this->dropTable(self::ENTITY_MODEL_TABLE);
+        $this->dropTable(self::VALUE_TABLE);
     }
 
 }
